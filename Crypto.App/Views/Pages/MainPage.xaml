@@ -1,0 +1,34 @@
+﻿<Page x:Class="Crypto.App.Views.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Title="MainPage">
+    <Grid Margin="20">
+        <StackPanel>
+            <ListView ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="#" DisplayMemberBinding="{Binding MarketCapRank}"/>
+                        <GridViewColumn Header="Coin">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding Image}" Width="20" Height="20"/>
+                                        <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
+                                        <TextBlock Text="{Binding Symbol}" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding CurrentPrice, StringFormat={}{0:C}}"/>
+                        <GridViewColumn Header="24h" DisplayMemberBinding="{Binding PriceChangePercentage24h, StringFormat={}{0:F2}%}"/>
+                        <GridViewColumn Header="Volume" DisplayMemberBinding="{Binding TotalVolume, StringFormat={}{0:N}}"/>
+                        <GridViewColumn Header="Market Cap" DisplayMemberBinding="{Binding MarketCap, StringFormat={}{0:N}}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Page>
