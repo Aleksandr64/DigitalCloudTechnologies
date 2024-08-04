@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Crypto.App.Utilities;
@@ -16,7 +17,7 @@ public class PlaceholderTextBox : TextBox
     }
 
     public static readonly DependencyProperty IsEmptyProperty =
-        DependencyProperty.Register("IsEmpty", typeof(bool), typeof(PlaceholderTextBox), 
+        DependencyProperty.Register("IsEmpty", typeof(bool), typeof(PlaceholderTextBox),
             new PropertyMetadata(false));
 
     public bool IsEmpty

@@ -27,6 +27,12 @@ public class Currency
 
     [JsonProperty("total_volume")]
     public long TotalVolume { get; set; }
+    
+    [JsonProperty("low_24h")]
+    public decimal LowPrice24h { get; set; }
+    
+    [JsonProperty("high_24h")]
+    public decimal HighPrice24h { get; set; }
 
     [JsonProperty("price_change_percentage_24h")]
     public decimal PriceChangePercentage24h { get; set; }

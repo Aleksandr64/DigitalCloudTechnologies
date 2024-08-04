@@ -5,30 +5,42 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       Title="MainPage">
-    <Grid Margin="20">
-        <StackPanel>
-            <ListView ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="#" DisplayMemberBinding="{Binding MarketCapRank}"/>
-                        <GridViewColumn Header="Coin">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="{Binding Image}" Width="20" Height="20"/>
-                                        <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
-                                        <TextBlock Text="{Binding Symbol}" Margin="5,0,0,0"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding CurrentPrice, StringFormat={}{0:C}}"/>
-                        <GridViewColumn Header="24h" DisplayMemberBinding="{Binding PriceChangePercentage24h, StringFormat={}{0:F2}%}"/>
-                        <GridViewColumn Header="Volume" DisplayMemberBinding="{Binding TotalVolume, StringFormat={}{0:N}}"/>
-                        <GridViewColumn Header="Market Cap" DisplayMemberBinding="{Binding MarketCap, StringFormat={}{0:N}}"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </StackPanel>
+    
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/MainPageStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid Margin="30">
+        <DataGrid ItemsSource="{Binding Currencies}" 
+                  SelectedItem="{Binding SelectedCurrency}" 
+                  Style="{StaticResource DataGridStyle}">
+            <DataGrid.ColumnHeaderStyle>
+                <StaticResource ResourceKey="SortableColumnHeaderStyle"/>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="#" Binding="{Binding MarketCapRank}" Width="50" />
+                <DataGridTemplateColumn Header="Coin" Width="2*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Image Source="{Binding Image}" Width="24" Height="24" Margin="0,0,8,0"/>
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Symbol}" Margin="8,0,0,0" Foreground="#A0A0A0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Price" Binding="{Binding CurrentPrice, StringFormat={}{0:C}}" Width="1.5*" />
+                <DataGridTextColumn Header="Low 24h" Binding="{Binding LowPrice24h, StringFormat={}{0:C}}" Width="1.5*" />
+                <DataGridTextColumn Header="High 24h" Binding="{Binding HighPrice24h, StringFormat={}{0:C}}" Width="1.5*" />
+                <DataGridTextColumn Header="24h" Binding="{Binding PriceChangePercentage24h, StringFormat={}{0:F1}%}" Width="*" />
+                <DataGridTextColumn Header="24h Volume" Binding="{Binding TotalVolume, StringFormat={}{0:N0}}" Width="2*" />
+                <DataGridTextColumn Header="Market Cap" Binding="{Binding MarketCap, StringFormat={}{0:N0}}" Width="2*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>

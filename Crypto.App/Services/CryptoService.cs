@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using Crypto.App.DTO;
 using Crypto.App.Helpers;
 using Crypto.App.Models;
 using Newtonsoft.Json;
@@ -8,7 +9,7 @@ namespace Crypto.App.Services;
 public class CryptoService
 {
     private readonly HttpHelper _httpHelper;
-    private const string BaseUrl = "https://api.coingecko.com/api/v3";
+    private const string CoinGeckoBaseUrl = "https://api.coingecko.com/api/v3";
     private const string Token = "CG-UPNLTdzzQdcDJF1XubdH3PCb";
 
     public CryptoService()
@@ -20,7 +21,7 @@ public class CryptoService
     {
         try
         {
-            string url = $"{BaseUrl}/coins/markets?vs_currency=usd&per_page={count}&page=1";
+            string url = $"{CoinGeckoBaseUrl}/coins/markets?vs_currency=usd&per_page={count}&page=1";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
             {
                 request.Headers.Add("accept", "application/json");
@@ -41,7 +42,7 @@ public class CryptoService
     {
         try
         {
-            var url = $"{BaseUrl}/coins/markets?vs_currency=usd&ids={id}";
+            var url = $"{CoinGeckoBaseUrl}/coins/markets?vs_currency=usd&ids={id}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
             {
                 request.Headers.Add("accept", "application/json");
@@ -56,6 +57,28 @@ public class CryptoService
         {
             Console.WriteLine($"Error fetching data: {ex.Message}");
             return new Currency();
+        }
+    }
+
+    public async Task<List<CoinSearch>?> GetListSearchCryptoCurrency(string searchText)
+    {
+        try
+        {
+            string url = $"{CoinGeckoBaseUrl}/search?query={searchText}";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+            {
+                request.Headers.Add("accept", "application/json");
+                request.Headers.Add("x-cg-demo-api-key", Token);
+
+                var response = await _httpHelper.GetAsync(request);
+                var deserialize = JsonConvert.DeserializeObject<CryptoSearchDto>(response); 
+                return deserialize?.Coins;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return new List<CoinSearch>();
         }
     }
 }

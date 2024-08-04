@@ -21,8 +21,7 @@
                                 IsHitTestVisible="False"
                                 Opacity="0.5"
                                 Text="{TemplateBinding Placeholder}"
-                                Visibility="{TemplateBinding IsEmpty,
-                                                             Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                Visibility="{TemplateBinding IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
                 </ControlTemplate>
@@ -32,6 +31,6 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Background" Value="White"/>
         <Setter Property="Foreground" Value="#666666"/>
-        <Setter Property="Margin" Value="20, 0, 0, 0"></Setter>
+        <Setter Property="Margin" Value="20, 0, 0, 0"/>
     </Style>
 </ResourceDictionary>

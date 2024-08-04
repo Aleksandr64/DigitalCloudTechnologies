@@ -14,20 +14,27 @@
     </Style>
 
     <Style x:Key="SearchInputStyle" TargetType="Border">
-        <Setter Property="CornerRadius" Value="20"/>
         <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="Gray"/>
-        <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="Width" Value="250"/>
-        <Setter Property="Height" Value="40"/>
+        <Setter Property="CornerRadius" Value="15"/>
+        <Setter Property="Width" Value="350"/>
+        <Setter Property="Height" Value="30"/>
     </Style>
 
+    <Style x:Key="SearchResultsBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="0,0,15,15"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#DDDDDD"/>
+        <Setter Property="Width" Value="350"/>
+        <Setter Property="MaxHeight" Value="200"/>
+    </Style>
+    
     <Style x:Key="SearchTextBoxStyle" TargetType="TextBox">
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="#666666"/>
-        <Setter Property="Margin" Value="20, 0, 0, 0"></Setter>
+        <Setter Property="Margin" Value="20, 0, 0, 0"/>
     </Style>
     
     <Style x:Key="ClearButtonStyle" TargetType="Button">
@@ -88,5 +95,39 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style x:Key="SearchResultsListBoxStyle" TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="MaxHeight" Value="200"/>
+    </Style>
 
+    <Style x:Key="SearchResultItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Margin" Value="20, 4, 23, 2"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#666666"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#EEEEEE"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="#DDDDDD"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
 </ResourceDictionary>

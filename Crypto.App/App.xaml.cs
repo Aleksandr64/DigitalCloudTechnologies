@@ -1,8 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
-using Crypto.App.ViewModels;
-using Crypto.App.Views.Pages;
+﻿using System.Windows;
 
 namespace Crypto.App;
 

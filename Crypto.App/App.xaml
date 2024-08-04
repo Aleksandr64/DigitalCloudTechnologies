@@ -6,8 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/Header.xaml"/>
-                <ResourceDictionary Source="Styles/PlaceHolderTextBox.xaml"/>
+                <ResourceDictionary Source="Styles/HeaderStyle.xaml"/>
+                <ResourceDictionary Source="Styles/PlaceHolderTextBoxStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
