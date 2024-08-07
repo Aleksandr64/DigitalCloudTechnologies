@@ -15,7 +15,11 @@
             Text="Cryptocurrency App" 
             FontSize="30" 
             Style="{StaticResource HeaderTextStyle}" 
-            Grid.Column="0"/>
+            Grid.Column="0">
+            <TextBlock.InputBindings>
+                <MouseBinding MouseAction="LeftClick" Command="{Binding NavigateToMainCommand}" />
+            </TextBlock.InputBindings>
+        </TextBlock>
 
         <Grid Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
             <Border x:Name="SearchBorder" Style="{StaticResource SearchInputStyle}">

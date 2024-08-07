@@ -1,23 +1,27 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Crypto.App.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Crypto.App.Views.Pages;
 
 public partial class CurrencyDetailsPage : Page
 {
-    public CurrencyDetailsPage(string id)
+    private readonly Func<string, CurrencyDetailsViewModel> _viewModelFactory;
+
+    public CurrencyDetailsPage(Func<string, CurrencyDetailsViewModel> viewModelFactory, string id)
     {
         InitializeComponent();
-        Console.WriteLine(id);
-        DataContext = new CurrencyDetailsViewModel(id);
+        _viewModelFactory = viewModelFactory;
+        DataContext = _viewModelFactory(id);
     }
 
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            ((MainWindow)Application.Current.MainWindow).MainFrame.Navigate(new MainPage());
+            ((MainWindow)Application.Current.MainWindow).MainFrame.Navigate(new MainPage(App.ServiceProvider.GetRequiredService<MainViewModel>()));
         });
     }
 }

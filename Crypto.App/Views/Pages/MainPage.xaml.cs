@@ -5,9 +5,9 @@ namespace Crypto.App.Views.Pages;
 
 public partial class MainPage : Page
 {
-    public MainPage()
+    public MainPage(MainViewModel mainViewModel)
     {
         InitializeComponent();
-        DataContext = new MainViewModel();
+        DataContext = mainViewModel;
     }
 }

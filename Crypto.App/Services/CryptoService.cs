@@ -1,35 +1,30 @@
 ﻿using System.Net.Http;
+using Crypto.App.Domain.Constants;
+using Crypto.App.Domain.Models;
 using Crypto.App.DTO;
 using Crypto.App.Helpers;
+using Crypto.App.Helpers.Interfaces;
 using Crypto.App.Models;
+using Crypto.App.Services.Interfaces;
 using Newtonsoft.Json;
 
 namespace Crypto.App.Services;
 
-public class CryptoService
+public class CryptoService : ICryptoService
 {
-    private readonly HttpHelper _httpHelper;
-    private const string CoinGeckoBaseUrl = "https://api.coingecko.com/api/v3";
-    private const string Token = "CG-UPNLTdzzQdcDJF1XubdH3PCb";
+    private readonly IHttpHelper _httpHelper;
 
-    public CryptoService()
+    public CryptoService(IHttpHelper httpHelper)
     {
-        _httpHelper = new HttpHelper();
+        _httpHelper = httpHelper;
     }
 
     public async Task<List<Currency>?> GetTopCurrenciesAsync(int count)
     {
         try
         {
-            string url = $"{CoinGeckoBaseUrl}/coins/markets?vs_currency=usd&per_page={count}&page=1";
-            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-            {
-                request.Headers.Add("accept", "application/json");
-                request.Headers.Add("x-cg-demo-api-key", Token);
-
-                var response = await _httpHelper.GetAsync(request);
-                return JsonConvert.DeserializeObject<List<Currency>>(response);
-            }
+            string url = $"coins/markets?vs_currency=usd&per_page={count}&page=1";
+            return await _httpHelper.GetAsync<List<Currency>>(url, ApiType.CoinGecko);
         }
         catch (Exception ex)
         {
@@ -38,25 +33,17 @@ public class CryptoService
         }
     }
 
-    public async Task<Currency?> GetCurrencyDetailsAsync(string id)
+    public async Task<CurrencyDetails> GetCurrencyDetailsAsync(string id)
     {
         try
         {
-            var url = $"{CoinGeckoBaseUrl}/coins/markets?vs_currency=usd&ids={id}";
-            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-            {
-                request.Headers.Add("accept", "application/json");
-                request.Headers.Add("x-cg-demo-api-key", Token);
-
-                var response = await _httpHelper.GetAsync(request);
-                var currency = JsonConvert.DeserializeObject<List<Currency>>(response);
-                return currency.FirstOrDefault();
-            }
+            string url = $"coins/{id}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false";
+            return await _httpHelper.GetAsync<CurrencyDetails>(url, "CoinGecko");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error fetching data: {ex.Message}");
-            return new Currency();
+            return new CurrencyDetails();
         }
     }
 
@@ -64,16 +51,9 @@ public class CryptoService
     {
         try
         {
-            string url = $"{CoinGeckoBaseUrl}/search?query={searchText}";
-            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-            {
-                request.Headers.Add("accept", "application/json");
-                request.Headers.Add("x-cg-demo-api-key", Token);
-
-                var response = await _httpHelper.GetAsync(request);
-                var deserialize = JsonConvert.DeserializeObject<CryptoSearchDto>(response); 
-                return deserialize?.Coins;
-            }
+            string url = $"search?query={searchText}";
+            var result = await _httpHelper.GetAsync<CryptoSearchDto>(url, ApiType.CoinGecko);
+            return result?.Coins;
         }
         catch (Exception e)
         {

@@ -6,29 +6,35 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Crypto.App.Models;
 using Crypto.App.Services;
+using Crypto.App.Services.Interfaces;
 using Crypto.App.ViewModels;
 using Crypto.App.Views.Pages;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 
-namespace Crypto.App.Views.Components
-{
+namespace Crypto.App.Views.Components;
+
     public partial class Header : UserControl
     {
         private readonly DispatcherTimer _searchDelayTimer;
-        private readonly CryptoService _cryptoService;
-        private HttpClient _httpClient;
+        private readonly ICryptoService _cryptoService;
 
+        
         public Header()
         {
+            
+        }
+        
+        public Header(ICryptoService cryptoService, HeaderViewModel headerViewModel)
+        {
             InitializeComponent();
-            _cryptoService = new CryptoService();
-            DataContext = new HeaderViewModel();
+            _cryptoService = cryptoService;
+            DataContext = headerViewModel;
             _searchDelayTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(0.3)
             };
             _searchDelayTimer.Tick += OnSearchDelayTimerTick;
-            _httpClient = new HttpClient();
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -49,7 +55,6 @@ namespace Crypto.App.Views.Components
             if (!string.IsNullOrEmpty(searchText))
             {
                 var response = await _cryptoService.GetListSearchCryptoCurrency(searchText);
-
                 var viewModel = (HeaderViewModel)DataContext;
                 viewModel.SearchResults.Clear();
                 if (response.Count > 0)
@@ -86,7 +91,7 @@ namespace Crypto.App.Views.Components
                 SearchBorder.CornerRadius = new CornerRadius(15);
             }
         }
-        
+
         private void HeaderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Window window = Window.GetWindow(this);
@@ -95,7 +100,7 @@ namespace Crypto.App.Views.Components
                 window.DragMove();
             }
         }
-        
+
         private void MinimizeButtonClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
@@ -119,8 +124,7 @@ namespace Crypto.App.Views.Components
                 var viewModel = (HeaderViewModel)DataContext;
                 viewModel.SearchResults.Clear();
                 var mainWindow = Application.Current.MainWindow as MainWindow;
-                mainWindow?.MainFrame.Navigate(new CurrencyDetailsPage(selectedItem.Id));
+                mainWindow?.MainFrame.Navigate(new CurrencyDetailsPage(App.ServiceProvider.GetRequiredService<Func<string, CurrencyDetailsViewModel>>(), selectedItem.Id));
             }
         }
     }
-}
