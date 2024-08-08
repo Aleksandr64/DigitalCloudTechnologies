@@ -38,7 +38,10 @@ public class CryptoService : ICryptoService
         try
         {
             string url = $"coins/{id}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false";
-            return await _httpHelper.GetAsync<CurrencyDetails>(url, "CoinGecko");
+            
+            var result = await _httpHelper.GetAsync<CurrencyDetails>(url, "CoinGecko");
+            
+            return result;
         }
         catch (Exception ex)
         {

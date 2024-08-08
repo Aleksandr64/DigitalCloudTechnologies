@@ -13,12 +13,13 @@ namespace Crypto.App.ViewModels;
 public class MainViewModel : ViewModelBase
 {
     private readonly ICryptoService _cryptoService;
-    private Currency _selectedCurrency;
+    private Currency? _selectedCurrency;
     private string _searchQuery;
 
     public MainViewModel(ICryptoService cryptoService)
     {
         _cryptoService = cryptoService;
+        _selectedCurrency = null;
         LoadCurrenciesCommand = new RelayCommand(async () => await LoadCurrenciesAsync());
         Currencies = new ObservableCollection<Currency>();
         _ = LoadCurrenciesAsync();
@@ -33,12 +34,8 @@ public class MainViewModel : ViewModelBase
         {
             _selectedCurrency = value;
             OnPropertyChanged();
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                mainWindow?.MainFrame.Navigate(new CurrencyDetailsPage(App.ServiceProvider.GetRequiredService<Func<string, CurrencyDetailsViewModel>>(), _selectedCurrency.Id));
-            });
-            _selectedCurrency = default;
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            mainWindow?.MainFrame.Navigate(new CurrencyDetailsPage(App.ServiceProvider.GetRequiredService<Func<string, CurrencyDetailsViewModel>>(), _selectedCurrency.Id));
         }
     }
 

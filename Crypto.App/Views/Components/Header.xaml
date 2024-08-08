@@ -22,7 +22,7 @@
         </TextBlock>
 
         <Grid Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
-            <Border x:Name="SearchBorder" Style="{StaticResource SearchInputStyle}">
+            <Border x:Name="SearchBorder" Style="{StaticResource SearchInputStyle}" CornerRadius="{Binding SearchBorderRadius}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -33,13 +33,13 @@
                                               FontSize="14" 
                                               Placeholder="Search..." 
                                               Grid.Column="0" 
-                                              TextChanged="SearchTextBox_TextChanged"/>
+                                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
                     <Button Grid.Column="1" 
                             Content="✕"
                             Style="{StaticResource ClearButtonStyle}"
                             Margin="0,0,5,0"
-                            Click="ClearButton_Click"/>
+                            Command="{Binding ClearSearchCommand}" />
                 </Grid>
             </Border>
 
@@ -50,7 +50,7 @@
                    AllowsTransparency="True"
                    PopupAnimation="None"
                    StaysOpen="False"
-                   Closed="SearchResultsPopup_OnClosed">
+                   IsOpen="{Binding IsPopupOpen, Mode=TwoWay}">
                 <Border Style="{StaticResource SearchResultsBorderStyle}">
                     <ListBox x:Name="SearchResultsListBox" 
                              ItemsSource="{Binding SearchResults}"

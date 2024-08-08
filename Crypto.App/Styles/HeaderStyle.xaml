@@ -15,7 +15,6 @@
 
     <Style x:Key="SearchInputStyle" TargetType="Border">
         <Setter Property="Background" Value="White"/>
-        <Setter Property="CornerRadius" Value="15"/>
         <Setter Property="Width" Value="350"/>
         <Setter Property="Height" Value="30"/>
     </Style>

@@ -10,6 +10,7 @@ public class CurrencyDetails
     [JsonProperty("market_data")]
     public MarketData MarketData { get; set; }
     public List<Ticker> Tickers { get; set; }
+    public Image Image { get; set; }
 }
 
 public class MarketData
@@ -55,4 +56,10 @@ public class Market
     public string Identifier { get; set; }
     [JsonProperty("has_trading_incentive")]
     public bool HasTradingIncentive { get; set; }
+}
+
+public class Image
+{
+    
+    public string Small { get; set; }
 }
