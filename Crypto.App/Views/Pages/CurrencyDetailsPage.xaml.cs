@@ -1,8 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
+﻿using System.Windows.Controls;
 using Crypto.App.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Crypto.App.Views.Pages;
 
@@ -15,13 +12,5 @@ public partial class CurrencyDetailsPage : Page
         InitializeComponent();
         _viewModelFactory = viewModelFactory;
         DataContext = _viewModelFactory(id);
-    }
-
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-    {
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            ((MainWindow)Application.Current.MainWindow).MainFrame.Navigate(new MainPage(App.ServiceProvider.GetRequiredService<MainViewModel>()));
-        });
     }
 }

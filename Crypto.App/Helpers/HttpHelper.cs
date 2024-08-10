@@ -1,38 +1,56 @@
 ﻿using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json.Serialization;
-using Crypto.App.Domain.Constants;
 using Crypto.App.Helpers.Interfaces;
+using Crypto.App.Services.Interfaces;
 using Newtonsoft.Json;
 
 namespace Crypto.App.Helpers;
 
 public class HttpHelper : IHttpHelper
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IErrorHandler _errorHandler;
+
+    public HttpHelper(IHttpClientFactory httpClientFactory, IErrorHandler errorHandler)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        _httpClientFactory = httpClientFactory;
+        _errorHandler = errorHandler;
+    }
 
-        public HttpHelper(IHttpClientFactory httpClientFactory)
-        {
-            _httpClientFactory = httpClientFactory;
-        }
-
-        public async Task<T?> GetAsync<T>(string url, string apiType, Action<HttpRequestMessage> configureRequest = null)
+    public async Task<T?> GetAsync<T>(string url, string apiType, Action<HttpRequestMessage> configureRequest = null)
+    {
+        try
         {
             var response = await SendRequestAsync(HttpMethod.Get, url, null, apiType, configureRequest);
             return JsonConvert.DeserializeObject<T>(response);
         }
+        catch (Exception ex)
+        {
+            await _errorHandler.HandleErrorAsync(ex, "Error occurred during GET request.");
+            return default;
+        }
+    }
 
-        public async Task<T?> PostAsync<T>(string url, HttpContent content, string apiType, Action<HttpRequestMessage> configureRequest = null)
+    public async Task<T?> PostAsync<T>(string url, HttpContent content, string apiType, Action<HttpRequestMessage> configureRequest = null)
+    {
+        try
         {
             var response = await SendRequestAsync(HttpMethod.Post, url, content, apiType, configureRequest);
             return JsonConvert.DeserializeObject<T>(response);
         }
+        catch (Exception ex)
+        {
+            await _errorHandler.HandleErrorAsync(ex, "Error occurred during POST request.");
+            return default;
+        }
+    }
 
-        private async Task<string> SendRequestAsync(HttpMethod method, string url, HttpContent content, string apiType, Action<HttpRequestMessage> configureRequest = null)
+    private async Task<string> SendRequestAsync(HttpMethod method, string url, HttpContent content, string apiType, Action<HttpRequestMessage> configureRequest = null)
+    {
+        try
         {
             var client = _httpClientFactory.CreateClient(apiType);
-            
             var request = new HttpRequestMessage(method, url);
+
             if (content != null)
             {
                 request.Content = content;
@@ -41,7 +59,14 @@ public class HttpHelper : IHttpHelper
             configureRequest?.Invoke(request);
 
             var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
         }
+        catch (Exception ex)
+        {
+            await _errorHandler.HandleErrorAsync(ex, "Error occurred during HTTP request.");
+            throw;
+        }
     }
+}

@@ -2,10 +2,7 @@
 using System.Windows.Input;
 using Crypto.App.Commands;
 using Crypto.App.Domain.Models;
-using Crypto.App.Models;
-using Crypto.App.Services;
 using Crypto.App.Services.Interfaces;
-using Crypto.App.Views.Pages;
 
 namespace Crypto.App.ViewModels;
 

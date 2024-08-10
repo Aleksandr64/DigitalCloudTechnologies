@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using System.Windows;
-using Crypto.App.Domain.Constants;
+﻿using System.Windows;
 using Crypto.App.Helpers;
 using Crypto.App.Helpers.Interfaces;
 using Crypto.App.Services;
@@ -16,28 +14,28 @@ namespace Crypto.App
     {
         public static IServiceProvider ServiceProvider { get; private set; }
 
+        public App()
+        {
+            var services = new ServiceCollection();
+            
+            ConfigureServices(services);
+
+            ServiceProvider = services.BuildServiceProvider();
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.ConfigureServices();
-
-            ServiceProvider = serviceCollection.BuildServiceProvider();
-
-            try
-            {
-                var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-                mainWindow.Show();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to create MainWindow: {ex.Message}\n{ex.StackTrace}");
-            }
+            base.OnStartup(e);
+            
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+            
+            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
-    }
-
-    public static class ServiceCollectionExtension
-    {
-        public static void ConfigureServices(this IServiceCollection services)
+        
+        public static void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient("CoinGecko", client =>
             {
@@ -49,16 +47,41 @@ namespace Crypto.App
             services.AddScoped<IHttpHelper, HttpHelper>();
 
             services.AddScoped<ICryptoService, CryptoService>();
+            services.AddScoped<IErrorHandler, ErrorHandler>();
 
-            services.AddScoped<MainViewModel>();
+            services.AddTransient<MainViewModel>();
             services.AddScoped<HeaderViewModel>();
             services.AddScoped<Func<string, CurrencyDetailsViewModel>>(provider => id =>
                 new CurrencyDetailsViewModel(provider.GetRequiredService<ICryptoService>(), id));
-
-            services.AddTransient<MainPage>();
-            services.AddScoped<CurrencyDetailsPage>();
+            
             services.AddSingleton<Header>();
+            
+            services.AddScoped<CurrencyDetailsPage>();
+            services.AddScoped<MainPage>();
+            
             services.AddSingleton<MainWindow>();
+        }
+        
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            HandleException(e.Exception);
+            e.Handled = true;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            HandleException(e.ExceptionObject as Exception);
+        }
+
+        private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            HandleException(e.Exception);
+            e.Handled = true; 
+        }
+
+        private void HandleException(Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Виняток", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

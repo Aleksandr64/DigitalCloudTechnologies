@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:Crypto.App.Utilities"
              Background="{StaticResource HeaderBackgroundBrush}"
              MouseLeftButtonDown="HeaderMouseLeftButtonDown">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/HeaderStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid Margin="5, 10, 15, 10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

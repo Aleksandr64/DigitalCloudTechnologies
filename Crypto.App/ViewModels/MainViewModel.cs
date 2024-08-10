@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 using Crypto.App.Commands;
 using Crypto.App.Models;
 using Crypto.App.Services.Interfaces;

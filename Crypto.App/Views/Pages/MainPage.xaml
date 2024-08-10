@@ -6,14 +6,6 @@
       mc:Ignorable="d"
       Title="MainPage">
     
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Styles/MainPageStyle.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
-    
     <Grid Margin="30">
         <DataGrid ItemsSource="{Binding Currencies}" 
                   SelectedItem="{Binding SelectedCurrency}" 

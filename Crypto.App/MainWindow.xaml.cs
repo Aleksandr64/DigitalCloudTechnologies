@@ -1,8 +1,6 @@
 ﻿using System.Windows;
-using Crypto.App.ViewModels;
 using Crypto.App.Views.Components;
 using Crypto.App.Views.Pages;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Crypto.App;
 
